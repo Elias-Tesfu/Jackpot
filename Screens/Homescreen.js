@@ -104,7 +104,7 @@ export default function Homescreen({ navigation }) {
 
 
     return (
-        <ImageBackground style={{ width: '100%', height: '100%' }} onError={handleError} resizeMode='stretch' source={require('../Images/Frame.jpg')}>
+        <ImageBackground style={ styles.imagebackground } onError={handleError} resizeMode='stretch' source={require('../Images/Frame.jpg')}>
             <SafeAreaView>
                 <View style={styles.container}>
                         <View style={{ flexDirection: 'row' }}>
@@ -171,6 +171,10 @@ export default function Homescreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+    imagebackground: {
+        width: 'null',
+        height: '100%'
+    },
     container: {
         flexDirection: 'column',
         marginTop: 45,

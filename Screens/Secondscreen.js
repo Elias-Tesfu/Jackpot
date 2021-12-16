@@ -8,18 +8,17 @@ export default function Secondscreen() {
     };
 
     return (
-        <ImageBackground style={{ width: 'null', height: 'null' }} onError={handleError} resizeMode='cover' source={require('../Images/Frame.jpg')}>
+        <ImageBackground style={ styles.imagebackground } onError={handleError} resizeMode='cover' source={require('../Images/Frame.jpg')}>
             <View style={ styles.container }>
                 <FlatList 
                     data={DATA}
-                    renderItem={({item}) => 
-                        <View>
-                            <Image source={{uri: item.image}} resizeMode="cover" style={{ width: 340, height: 400, borderRadius: 5 }} />
-                            <Text>{item.title}</Text>
-                            <Text>{item.descriprion}</Text>
+                    renderItem={({item}) =>
+                        <View style={ styles.item }>
+                            <Image source={{ uri: item.image }} resizeMethod='scale' style={ styles.image }/>
+                            <Text style={ styles.title }>{ item.title }</Text>
+                            <Text style={ styles.descriprion }>{ item.descriprion }</Text>
                         </View>
                     }
-                    keyExtractor={item => item.id}
                 />
             </View>
         </ImageBackground>
@@ -27,17 +26,33 @@ export default function Secondscreen() {
 }
 
 const styles = StyleSheet.create({
+    imagebackground: {
+        width: 'null',
+        height: 'null'
+    },
     container: {
-        alignItems: 'center',
-        justifyContent: 'center',
+        paddingHorizontal: 5,
     },
     item: {
-        backgroundColor: '#f1a30b',
+        backgroundColor: '#FFFFFF99',
+        marginVertical: 5,
+        paddingBottom: 15,
+        borderRadius: 15,
+    },
+    image: {
         width: 'null',
-        padding: 5,
-        marginVertical: 4,
+        height: 400,
+        borderTopStartRadius: 15,
+        borderTopEndRadius: 15,
+        marginBottom: 10,
     },
     title: {
         fontSize: 32,
+        fontWeight: '800',
+        paddingHorizontal: 7,
+        marginBottom: 10,
     },
+    descriprion: {
+        paddingHorizontal: 7,
+    }
 })
