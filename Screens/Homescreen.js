@@ -1,13 +1,38 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Image, Button, ImageBackground, SafeAreaView, StyleSheet, Text, View, Alert, TouchableOpacity } from 'react-native'
 import { FontAwesome5 } from '@expo/vector-icons'; 
 import { FontAwesome } from '@expo/vector-icons'; 
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 import CountDown from 'react-native-countdown-component';
+import * as SMS from 'expo-sms';
+
 import TeleBirr from '../Images/TeleBirr.png';
 
-export default function Homescreen() {
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/firestore';
+import "firebase/firestore"
+
+const firebaseConfig = {
+    apiKey: "AIzaSyACjAI3CP9W66yWGZ47OPJOBKMzKbo54FI",
+    authDomain: "jackpot-3fe0a.firebaseapp.com",
+    projectId: "jackpot-3fe0a",
+    storageBucket: "jackpot-3fe0a.appspot.com",
+    messagingSenderId: "1057779778010",
+    appId: "1:1057779778010:web:6303d28dba3660ff1040e3"
+  };
+
+if (firebase.apps.length === 0) {
+    firebase.initializeApp(firebaseConfig);
+}
+
+export default function Homescreen({ navigation }) {
     const [randomNumber, setRandomNumber] = useState(0);
+    const [used, setUsed] = useState(true);
+    const [SMSavailable, setSMSavailable] = useState(false);
+
+    useEffect(() => {
+        SMS.isAvailableAsync().then(setSMSavailable)
+    }, []);
 
 
     const handleError = (e) => {
@@ -18,7 +43,65 @@ export default function Homescreen() {
         const randomNumber = Math.floor((Math.random() * 1000000000) + 1);
         setRandomNumber(randomNumber);
         console.log("The Random Number Generated is - " + randomNumber);
+
+        let docRef = lotto_collection.doc(randomNumber.toString());
+        docRef.get().then((doc) => {
+            if(doc.exists) {
+                console.log("This number already exists in the Database");
+                console.log("Document data:", doc.data());
+
+                setRandomNumber(0);
+
+                Alert.alert(
+                    "Lottery Number Already Used",
+                    "Please get a new Lottery Number Again"
+                )
+            } else {
+                console.log("No such Document!");
+                setUsed(false)
+                setRandomNumber(randomNumber)
+            }
+        })
     };
+    const lotto_collection = firebase.firestore().collection('Lottery_Number')
+    const send = async () => {
+        try {
+            if (randomNumber == 0) {
+                console.log("No Lottery Number")
+                Alert.alert(
+                    "Jackpot",
+                    "No Lottery Number, Please get Lottery Number !!!"
+                )
+            } else {
+                if(!used) {
+                if (SMSavailable) {
+                    console.log('going for it!');
+                    await SMS.sendSMSAsync(
+                      ['9090'],
+                      randomNumber.toString(),
+                    );
+
+                    lotto_collection.doc(randomNumber.toString())
+                    .set({
+                        number: randomNumber
+                    });
+                    console.log("Successfully added the Lottery Number - "  + randomNumber);
+                    setRandomNumber(0);
+                } else {
+                    console.log("Unfortunetly SMS is not available on this Device");
+                    Alert.alert(
+                        "Jackpot",
+                        "SMS Not Available, Unfortunetly SMS is not available on this Device"
+                    )
+                    setRandomNumber(0)
+                }
+            }
+            }
+        } catch(err) {
+            throw err;
+        }
+    };
+
 
     return (
         <ImageBackground style={{ width: '100%', height: '100%' }} onError={handleError} resizeMode='stretch' source={require('../Images/Frame.jpg')}>
@@ -29,15 +112,19 @@ export default function Homescreen() {
                                 <Text style={ styles.jackpot }>JACKPOT</Text>
                                 <Text style={ styles.textGoesHere }>Text goes here</Text>
                             </View>
-                            <View style={{  height: 100 }}>
+                            <TouchableOpacity 
+                            onPress={() => navigation.navigate('Second')}
+                        >
+                            <View style={{ height: 100}}>
                                 <MaterialCommunityIcons name="account-circle-outline" size={50} color="white" />
                             </View>
+                        </TouchableOpacity>
                         </View>
 
                         <View style={{ paddingVertical: 25 }}>
                             <CountDown
                                 until={60 * 100 * 60} 
-                                size={40}
+                                size={35}
                                 onFinish={() => Alert.alert('JACKPOT', 'Finished')}
                                 digitStyle={{backgroundColor: '#FFF'}}
                                 timeToShow={['D', 'H', 'M']}
@@ -59,11 +146,11 @@ export default function Homescreen() {
                             <Button
                                 title="Buy"
                                 color="#2196F3"
-                                
+                                onPress={send}
                             />        
                         </View>
 
-                        <View style={{ alignItems: 'center', marginBottom: 45 }}>
+                        <View style={{ alignItems: 'center', marginBottom: 35 }}>
                             <Text style={{ fontWeight: 'bold', fontSize: 15, letterSpacing: -1, color: '#FFF' }}>Sponsored By</Text>
                             <Image source={TeleBirr} style={{ width: 100, height: 100, alignSelf: 'center' }} />
                         </View>
@@ -86,7 +173,7 @@ export default function Homescreen() {
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'column',
-        marginTop: 55,
+        marginTop: 45,
         paddingHorizontal: 10
       },
       jackpot: { 
