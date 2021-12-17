@@ -27,6 +27,8 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": "Jackpot is an app that replace the physical usage of Lottery Tickets.",
+    "githubUrl": "https://github.com/Elias-Tesfu/Jackpot"
   }
 }
