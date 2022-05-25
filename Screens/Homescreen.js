@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Image, Button, ImageBackground, SafeAreaView, StyleSheet, Text, View, Alert, TouchableOpacity } from 'react-native'
+import { Image, Button, ImageBackground, SafeAreaView, StyleSheet, Text, View, Alert, TouchableOpacity, ScrollView } from 'react-native'
 import { FontAwesome5 } from '@expo/vector-icons'; 
 import { FontAwesome } from '@expo/vector-icons'; 
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
@@ -79,8 +79,8 @@ export default function Homescreen({ navigation }) {
                 if (SMSavailable) {
                     console.log('going for it!');
                     await SMS.sendSMSAsync(
-                      ['9090'],
-                      randomNumber.toString(),
+                        ['+251942746791'],
+                        randomNumber.toString(),
                     );
 
                     lotto_collection.doc(randomNumber.toString())
@@ -107,12 +107,11 @@ export default function Homescreen({ navigation }) {
 
     return (
         <ImageBackground style={ styles.imagebackground } onError={handleError} source={require('../Images/Frame.jpg')}>
-            <SafeAreaView>
-                <View style={styles.container}>
-
+            <View style={styles.container}>
+                    <ScrollView>
                         {/* Header */}
-                        <View style={{ flexDirection: 'row', width: '100%', alignSelf: 'center', marginBottom: '7%' }}>
-                            <View style={{ flex: 1, height: '10%' }}>
+                        <View style={{ flex: 1, flexDirection: 'row', width: '100%', alignSelf: 'center', marginBottom: '2%' }}>
+                            <View style={{ flex: 1, height: '80%', marginTop: 25 }}>
                                 <Text style={ styles.jackpot }>JACKPOT</Text>
                                 <Text style={ styles.textGoesHere }>Text goes here</Text>
                             </View>
@@ -131,12 +130,14 @@ export default function Homescreen({ navigation }) {
                                 until={60 * 100 * 60} 
                                 size={35}
                                 onFinish={() => Alert.alert('JACKPOT', 'Finished')}
-                                digitStyle={{backgroundColor: '#FFF'}}
+                                digitStyle={{backgroundColor: '#FFF', shadowOffset: { width: 5, height: 5 }, shadowOpacity: 0.4, shadowRadius: 5, }}
                                 timeToShow={['D', 'H', 'M']}
                                 onPress={() => Alert.alert('JACKPOT', 'Created by Elias Tesfu') }
                             />
                         </View>
 
+
+                        {/* Random Lottory number generator and the Wining prize */}
                         <View style={{ flex: 1, alignItems: 'center', paddingVertical: 5, marginBottom: '7%' }}>
                             {/* the random lottery generator  */}
                             <View style={ styles.lottoNum }>
@@ -174,15 +175,14 @@ export default function Homescreen({ navigation }) {
                                 <MaterialCommunityIcons name="facebook-messenger" size={24} color="white" style={{ paddingRight: 15 }} />
                             </View>
                         </View>
-                </View>
-            </SafeAreaView>
+                    </ScrollView>
+            </View>
         </ImageBackground>
     )
 }
 
 const styles = StyleSheet.create({
     imagebackground: {
-        flex: 1,
         width: '100%',
         height: '110%',
         resizeMode: 'cover'
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
-        marginTop: '5%',
+        paddingTop: '11%',
         paddingHorizontal: 10
       },
 
