@@ -8,10 +8,10 @@ import * as SMS from 'expo-sms';
 
 import TeleBirr from '../Images/TeleBirr.png';
 
+//Firebase confiugeration
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 import "firebase/firestore"
-
 const firebaseConfig = {
     apiKey: "AIzaSyACjAI3CP9W66yWGZ47OPJOBKMzKbo54FI",
     authDomain: "jackpot-3fe0a.firebaseapp.com",
@@ -19,8 +19,7 @@ const firebaseConfig = {
     storageBucket: "jackpot-3fe0a.appspot.com",
     messagingSenderId: "1057779778010",
     appId: "1:1057779778010:web:6303d28dba3660ff1040e3"
-  };
-
+};
 if (firebase.apps.length === 0) {
     firebase.initializeApp(firebaseConfig);
 }
@@ -34,11 +33,12 @@ export default function Homescreen({ navigation }) {
         SMS.isAvailableAsync().then(setSMSavailable)
     }, []);
 
-
+    //Error Handler
     const handleError = (e) => {
         console.log(e.nativeEvent.error);
     };
 
+    //Random Numnber Generator
     const randomNumberGenerator = () => {
         const randomNumber = Math.floor((Math.random() * 1000000000) + 1);
         setRandomNumber(randomNumber);
@@ -63,6 +63,8 @@ export default function Homescreen({ navigation }) {
             }
         })
     };
+
+    //Firebase database 
     const lotto_collection = firebase.firestore().collection('Lottery_Number')
     const send = async () => {
         try {
@@ -104,24 +106,27 @@ export default function Homescreen({ navigation }) {
 
 
     return (
-        <ImageBackground style={ styles.imagebackground } onError={handleError} resizeMode='stretch' source={require('../Images/Frame.jpg')}>
+        <ImageBackground style={ styles.imagebackground } onError={handleError} source={require('../Images/Frame.jpg')}>
             <SafeAreaView>
                 <View style={styles.container}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <View style={{ flex: 1, height: 100 }}>
+
+                        {/* Header */}
+                        <View style={{ flexDirection: 'row', width: '100%', alignSelf: 'center', marginBottom: '7%' }}>
+                            <View style={{ flex: 1, height: '10%' }}>
                                 <Text style={ styles.jackpot }>JACKPOT</Text>
                                 <Text style={ styles.textGoesHere }>Text goes here</Text>
                             </View>
-                            <TouchableOpacity 
-                            onPress={() => navigation.navigate('Second')}
-                        >
-                            <View style={{ height: 100}}>
-                                <MaterialCommunityIcons name="account-circle-outline" size={50} color="white" />
-                            </View>
-                        </TouchableOpacity>
+
+                            {/* Account setting button  */}
+                            <TouchableOpacity onPress={() => navigation.navigate('Second')}>
+                                <View style={{ flex: 1, height: '10%' }}>
+                                    <MaterialCommunityIcons name="account-circle-outline" size={45} color="white" />
+                                </View>
+                            </TouchableOpacity>
                         </View>
 
-                        <View style={{ paddingVertical: 25 }}>
+                        {/* Coutn Down Function with view */}
+                        <View style={{ flex: 1, paddingVertical: 15, marginBottom: '5%' }}>
                             <CountDown
                                 until={60 * 100 * 60} 
                                 size={35}
@@ -132,16 +137,19 @@ export default function Homescreen({ navigation }) {
                             />
                         </View>
 
-                        <View style={{ alignItems: 'center', paddingVertical: 15 }}>
+                        <View style={{ flex: 1, alignItems: 'center', paddingVertical: 5, marginBottom: '7%' }}>
+                            {/* the random lottery generator  */}
                             <View style={ styles.lottoNum }>
                                 <Text style={{ fontSize: 25, letterSpacing: 3 }}>{randomNumber} | <TouchableOpacity onPress={randomNumberGenerator}><FontAwesome name="repeat" size={24} color="white" /></TouchableOpacity> </Text>
                             </View>
 
+                            {/* 1,000,000 birr with red background */}
                             <View style={ styles.Birr }>
                                 <Text style={{ fontWeight: 'bold', fontSize: 23, letterSpacing: 3.5 }}> <FontAwesome5 name="coins" size={18} color="yellow" /> 1,000,000 ብር</Text>
                             </View>
                         </View>
 
+                        {/* The buy button */}
                         <View style={{ alignSelf: 'center', width: 100, marginBottom:20 }}>
                             <Button
                                 title="Buy"
@@ -150,11 +158,13 @@ export default function Homescreen({ navigation }) {
                             />        
                         </View>
 
+                        {/* The sponsored list horizontal  */}
                         <View style={{ alignItems: 'center', marginBottom: 35 }}>
                             <Text style={{ fontWeight: 'bold', fontSize: 15, letterSpacing: -1, color: '#FFF' }}>Sponsored By</Text>
                             <Image source={TeleBirr} style={{ width: 100, height: 100, alignSelf: 'center' }} />
                         </View>
 
+                        {/* contact us section at the bottom */}
                         <View style={{ alignItems: 'flex-end', paddingRight: 15 }}>
                             <Text style={{ color: 'white' }}>Tell your friends about us</Text>
                             <View style={{ flexDirection: 'row' }}>
@@ -172,34 +182,40 @@ export default function Homescreen({ navigation }) {
 
 const styles = StyleSheet.create({
     imagebackground: {
-        width: 'null',
-        height: '100%'
+        flex: 1,
+        width: '100%',
+        height: '110%',
+        resizeMode: 'cover'
     },
+
     container: {
+        flex: 1,
         flexDirection: 'column',
-        marginTop: 45,
+        marginTop: '5%',
         paddingHorizontal: 10
       },
-      jackpot: { 
+
+    jackpot: { 
+        flex: 1,
+        paddingLeft: '15%',
         color:'white', 
         fontWeight: 'bold', 
-        fontSize: 25, 
+        fontSize: 30, 
         textAlign: 'center', 
-        textTransform: 'uppercase', 
-        paddingTop: 10,
         letterSpacing: 1.5, 
+        textTransform: 'uppercase', 
     },
+    
     textGoesHere: { 
+        flex: 1,
+        paddingLeft: '15%',
         color:'white', 
         fontWeight: '400', 
-        textAlign: 'center',  
         fontSize: 20, 
+        textAlign: 'center',  
         letterSpacing: 2.5, 
-        paddingTop: 10 
     },
-    countDown: { 
-        paddingBottom: 15,
-    },
+
     lottoNum: { 
         shadowColor: "#000", 
         shadowOffset: { width: 0, height: 15 },
@@ -210,10 +226,11 @@ const styles = StyleSheet.create({
         opacity: 0.9, 
         alignItems: 'center',
         justifyContent: 'center', 
-        marginBottom: 25, 
+        marginBottom: 35, 
         width: 260, 
         height: 40 
     },
+
     Birr: { 
         shadowColor: "#000", 
         shadowOffset: { width: 0, height: 15 },
@@ -225,7 +242,6 @@ const styles = StyleSheet.create({
         opacity: 0.6, 
         alignItems: 'center', 
         justifyContent: 'center',
-        marginBottom: 25, 
         width: 280, 
         height: 45 
     }
