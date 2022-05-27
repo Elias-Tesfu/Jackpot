@@ -14,7 +14,7 @@ export default function Secondscreen() {
                     data={DATA}
                     renderItem={({item}) =>
                         <View style={ styles.item }>
-                            <Image source={{ uri: item.image }} resizeMethod='scale' style={ styles.image }/>
+                            <Image source={{ uri: item.image }} style={ styles.image }/>
                             <Text style={ styles.title }>{ item.title }</Text>
                             <Text style={ styles.descriprion }>{ item.descriprion }</Text>
                         </View>
@@ -41,10 +41,11 @@ const styles = StyleSheet.create({
     },
     image: {
         width: 'null',
-        height: 400,
+        height: 300,
         borderTopStartRadius: 15,
         borderTopEndRadius: 15,
         marginBottom: 10,
+        resizeMode: 'fit'
     },
     title: {
         fontSize: 32,
